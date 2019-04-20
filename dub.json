@@ -1,0 +1,27 @@
+{
+	"name" : "hunt-snapshot-0_10_7",
+	"targetType": "library",
+	"license": "Apache-2.0",
+	"copyright": "Copyright (C) 2015-2018, Shanghai Putao Technology Co., Ltd",
+	"description" : "A high performance full-stack Web framework (A snapshot of the old version 0.10.7).",
+	"dependencies" : {
+	},
+	"sourcePaths": [
+		"source/"
+	],
+	"importPaths": [
+		"source/"
+	],
+	"versions-netbsd": [
+		"Kqueue"
+	],
+	"versions-freebsd": [
+		"Kqueue"
+	],
+	"versions-openbsd": [
+		"Kqueue"
+	],
+	"versions-osx": [
+		"Kqueue"
+	],
+}

@@ -1,0 +1,21 @@
+﻿/*
+ * Hunt - a framework for web and console application based on Collie using Dlang development
+ *
+ * Copyright (C) 2015-2017  Shanghai Putao Technology Co., Ltd
+ *
+ * Developer: HuntLabs
+ *
+ * Licensed under the Apache-2.0 License.
+ *
+ */
+
+module hunt.http.exception;
+
+import collie.utils.exception;
+import hunt.exception;
+
+mixin ExceptionBuild!("Http","Hunt");
+
+mixin ExceptionBuild!("HttpErro","Http");
+
+mixin ExceptionBuild!("CreateResponse","HttpErro");
