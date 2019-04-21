@@ -174,12 +174,13 @@ private:
 
     final PipelineBase addHelper(Context)(Context ctx, bool front)
     {
-        PipelineContext[] insertBefore(PipelineContext[] ctxs, Context ctx){
+        PipelineContext[] addBefore(PipelineContext[] ctxs, Context ctx){
             auto tctxs = new PipelineContext[ctxs.length + 1];
             tctxs[0] = ctx;
             tctxs[1..$] = ctxs[0..$];
             return tctxs;
         }
+
         PipelineContext[] insertBack(PipelineContext[] ctxs, Context ctx){
             auto tctxs = new PipelineContext[ctxs.length + 1];
             tctxs[0..ctxs.length] = ctxs[0..$];
@@ -188,14 +189,14 @@ private:
         }
 
         _isFinalize = false;
-        _ctxs = front ? insertBefore(_ctxs, ctx) : insertBack(_ctxs, ctx);
+        _ctxs = front ? addBefore(_ctxs, ctx) : insertBack(_ctxs, ctx);
         if (Context.dir == HandlerDir.BOTH || Context.dir == HandlerDir.IN)
         {
-            _inCtxs = front ? insertBefore(_inCtxs, ctx) : insertBack(_inCtxs, ctx);
+            _inCtxs = front ? addBefore(_inCtxs, ctx) : insertBack(_inCtxs, ctx);
         }
         if (Context.dir == HandlerDir.BOTH || Context.dir == HandlerDir.OUT)
         {
-            _outCtxs = front ? insertBefore(_outCtxs, ctx) : insertBack(_outCtxs, ctx);
+            _outCtxs = front ? addBefore(_outCtxs, ctx) : insertBack(_outCtxs, ctx);
         }
         return this;
     }

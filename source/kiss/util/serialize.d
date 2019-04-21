@@ -76,7 +76,7 @@ ubyte getbytenum(ulong v)
 	ubyte i = 0;
 	for (; i < byte_dots.length; i++)
 	{
-		if (v <= byte_dots[i])
+		if (v < byte_dots[i])
 		{
 			break;
 		}
@@ -89,7 +89,7 @@ ubyte getbytenums(ulong v)
 	ubyte i = 0;
 	for (; i < byte_dots_s.length; i++)
 	{
-		if (v <= byte_dots_s[i])
+		if (v < byte_dots_s[i])
 		{
 			break;
 		}
@@ -104,27 +104,29 @@ byte[] toVariant(T)(T t) if (isSignedType!T)
 	bool symbol = false;
 	if (t < 0)
 		symbol = true;
-	ubyte multiple = 1;
 
 	ulong val = cast(ulong) abs(t);
 
 	ubyte num = getbytenums(val);
+
 	ubyte[] var;
-	for (size_t i = num; i > 1; i--)
+	if(num == 1)
 	{
-		auto n = val / (byte_dots_s[i - 2] * multiple);
-		if (symbol && multiple == 1)
-			n = n | 0x40;
-		var ~= cast(ubyte) n;
-		val = (val % (byte_dots_s[i - 2] * multiple));
-		multiple = 2;
+		if (symbol)
+			val = val | 0x40;
+	}
+	else{
+		for (size_t i = num; i > 1; i--)
+		{
+			auto n = val / (byte_dots_s[i - 2] * 2);
+			if (symbol && i == num)
+				n = n | 0x40;
+			var ~= cast(ubyte) n;
+			val = (val % (byte_dots_s[i - 2] * 2));
+		}
 	}
 
-	if (num == 1 && symbol)
-		val = val | 0x40;
-
 	var ~= cast(ubyte)(val | 0x80);
-
 	return cast(byte[]) var;
 }
 
@@ -133,28 +135,34 @@ T toT(T)(const byte[] b, out long index) if (isSignedType!T)
 	T val = 0;
 	ubyte i = 0;
 	bool symbol = false;
-	for (i = 0; i < b.length; i++)
+
+	if(b.length == 1)
 	{
-		if (i == 0)
-		{
-			val = (b[i] & 0x3F);
-			if (b[i] & 0x40)
-				symbol = true;
-		}
-		else if (i == 1)
-		{
-			val = cast(T)((val << 6) + (b[i] & 0x7F));
-		}
-		else
-		{
-			val = cast(T)((val << 7) + (b[i] & 0x7F));
-		}
-
-		if (b[i] & 0x80)
-			break;
+		val = (b[i] & 0x3F);
+		if (b[i] & 0x40)
+			symbol = true;
 	}
-	index = i + 1;
+	else
+	{
+		for (i = 0; i < b.length; i++)
+		{
+			if (i == 0)
+			{
+				val = (b[i] & 0x3F);
+				if (b[i] & 0x40)
+					symbol = true;			
+			}
+			else
+			{
+				val = cast(T)((val << 7) + (b[i] & 0x7F));
+			}
+		
+			if (b[i] & 0x80)
+				break;
+		}
+	}
 
+	index = i + 1;
 	if (symbol)
 		return cast(T)(val * -1);
 	else
@@ -1307,8 +1315,13 @@ unittest
 
 		uint j6 = (1 << 21) + 50;
 		uint j7 = (1 << 28) + 50;
-		uint j8 = j6 + j7;
+		uint j8 = 128;
 		uint j9 = 0xFFFFFFFF;
+
+		{
+
+
+		}
 
 		ulong j10 = (cast(ulong) 1 << 35) + 50;
 		ulong j11 = (cast(ulong) 1 << 42) + 50;
@@ -1361,11 +1374,13 @@ unittest
 		int i9 = (1 << 16) + 50;
 		int i10 = (1 << 25) + 50;
 		int i11 = (1 << 30) + 50;
-		int i12 = -i9;
+		int i12 = 64;
 		int i13 = -i10;
 		int i14 = -i11;
 		int i15 = i9 + i10 + i11;
 		int i16 = -i15;
+
+
 
 		test(i9);
 		test(i10);
@@ -1476,5 +1491,27 @@ unittest
 	test_struct_class_array();
 	test_ref_class();
 	test_json_ser();
-}*/
 
+	////unsigned
+		uint ut1 = 1 << 7;
+		uint ut2 = 1 << 14;
+		uint ut3 = 1 << 21;
+		uint ut4 = 1 << 28;
+
+//signed
+		int it1 = 1 << 6;
+		int it2 = 1 << 13;
+		int it3 = 1 << 20;
+		int it4 = 1 << 27;
+
+		test1(ut1);
+		test1(ut2);
+		test1(ut3);
+		test1(ut4);
+
+		test1(it1);
+		test1(it2);
+		test1(it3);
+		test1(it4);
+}
+*/

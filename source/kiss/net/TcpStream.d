@@ -11,19 +11,18 @@
 
 module kiss.net.TcpStream;
 
+import kiss.container.ByteBuffer;
+import kiss.core;
 import kiss.event;
 import kiss.net.core;
+import kiss.logger;
 
 import std.format;
-import std.socket;
 import std.exception;
-import kiss.logger;
 import std.socket;
 import core.thread;
 import core.time;
 
-import kiss.container.ByteBuffer;
-import kiss.core;
 
 /**
 */
@@ -36,8 +35,6 @@ class TcpStream : AbstractStream
     {
         super(loop, family, bufferSize);
         this.socket = new Socket(family, SocketType.STREAM, ProtocolType.TCP);
-
-        // _localAddress = socket.localAddress();// TODO:
 
         _isClientSide = false;
         _isConnected = false;
@@ -73,7 +70,7 @@ class TcpStream : AbstractStream
             start();
             _isConnected = true;
             _remoteAddress = addr;
-            _localAddress = binded;
+            _localAddress = this.socket.localAddress();
         }
         catch (Exception ex)
         {
@@ -224,8 +221,7 @@ protected:
         super.onClose();
         _isConnected = false;
         this.socket.shutdown(SocketShutdown.BOTH);
-        version (Posix)
-            this.socket.close();
+        this.socket.close();
 
         if (closeHandler)
             closeHandler();

@@ -65,7 +65,7 @@ abstract class AbstractListener : AbstractSocketChannel
     override void onWriteDone()
     {
         version (KissDebugMode)
-            tracef("a new connection created, thread: %s", getTid());
+            tracef("a new connection created");
     }
 }
 
@@ -118,10 +118,12 @@ abstract class AbstractStream : AbstractSocketChannel, Stream
             if (errno != EINTR && errno != EAGAIN && errno != EWOULDBLOCK)
             {
                 this._error = true;
-                this._erroString = fromStringz(strerror(errno)).idup;
+                this._erroString = cast(string)fromStringz(strerror(errno));
             }
-            else
-                isDone = false;
+
+            version (KissDebugMode)
+                warningf("read error: isDone=%s, errno=%d, message=%s", 
+                    isDone, errno, cast(string)fromStringz(strerror(errno)));
         }
         else
         {
@@ -246,6 +248,7 @@ abstract class AbstractStream : AbstractSocketChannel, Stream
             {
                 this._error = true;
                 this._erroString = lastSocketError();
+                warningf("errno=%d, message: %s", errno, this._erroString);
             }
         }
         else
@@ -278,7 +281,7 @@ abstract class AbstractStream : AbstractSocketChannel, Stream
     {
         // notified by kqueue selector when data writing done
         version (KissDebugMode)
-            tracef("done with data writing, thread: %s", getTid());
+            tracef("done with data writing");
     }
 
     // protected UbyteArrayObject _readBuffer;
@@ -372,6 +375,6 @@ abstract class AbstractDatagramSocket : AbstractSocketChannel, IDatagramSocket
     {
         // notified by kqueue selector when data writing done
         version (KissDebugMode)
-            tracef("done with data writing, thread: %s", getTid());
+            tracef("done with data writing");
     }
 }

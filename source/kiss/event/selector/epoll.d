@@ -114,7 +114,6 @@ class AbstractSelector : Selector
             return false;
         }
         // TODO: check this
-        // watcher.currtLoop = null;
         // watcher.clear();
         return true;
     }
@@ -140,7 +139,7 @@ class AbstractSelector : Selector
             AbstractChannel watch = cast(AbstractChannel)(events[i].data.ptr);
             if (watch is null)
             {
-                warningf("watcher(fd=%d) is null", watch.handle);
+                version(KissDebugMode) warningf("watcher is null");
                 continue;
             }
 
