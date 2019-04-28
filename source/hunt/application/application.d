@@ -194,8 +194,6 @@ final class Application
       
 		_sessionStorage.setPrefix(config.prefix);
         _sessionStorage.setExpire(config.expire);
-
-		writeln(" initSessionStorage " ,_sessionStorage);
     }
 
 	CacheManger getCacheManger()
@@ -205,7 +203,6 @@ final class Application
 	
 	SessionStorage getSessionStorage()
 	{
-		writeln(" getSessionStorage " , _sessionStorage);
 		return _sessionStorage;
 	}
 	

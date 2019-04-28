@@ -31,10 +31,11 @@ class Session
 		this._sessionStorage = sessionStorage;
 		this._sessions = parseJSON(_sessionStorage.get(_sessionId));
 	}
-	Session set(string key,string value)
+
+	Session set(T)(string key, T value)
 	{
-		_sessions[key] = value;
-		_sessionStorage.set(_sessionId,_sessions.toString);
+		_sessions[key] = value.to!string;
+		_sessionStorage.set(_sessionId, _sessions.toString);
 		return this;
 	}
 
@@ -49,6 +50,20 @@ class Session
 			return string.init;
 		}
 	}
+
+    T get(T)(string key, T defaultValue)
+    {
+        string v = get(key);
+
+        try
+    	{
+    		return to!T(v);
+    	}
+    	catch (Exception e)
+    	{
+    		return defaultValue;
+    	}
+    }
 
 	void remove(string key)
 	{
@@ -103,14 +118,14 @@ class SessionStorage
 	
 	bool put(string key, string value)
 	{
-		return set(key,value,_expire);
+		return put(key, value, _expire);
 	}
 	
 	string get(string key)
 	{
 		return  cast(string)_cache.get!string(getRealAddr(key));
 	}
-	
+
 	alias isset = containsKey;
 	bool containsKey(string key)
 	{
