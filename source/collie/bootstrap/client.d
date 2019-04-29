@@ -122,14 +122,13 @@ protected:
 				{
 					if (_timer is null)
 					{
-						logDebug("new timer!");
 						_timer = new KissTimer(_loop);
 						_timer.setTimerHandle(&onTimeOut);
 					}
 					if(!_timer.watched) {
 
 						bool rv = _timer.start(_timeOut);
-						logDebug("start timer!   : ", rv);
+						//logDebug("start timer!   : ", rv);
 					}
 				}
 				_logInfo.tryCount = 0;

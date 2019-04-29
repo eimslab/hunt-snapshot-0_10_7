@@ -134,8 +134,6 @@ abstract class Controller
 
     protected final bool doMiddleware()
     {
-       logDebug("doMiddlware ..");
-
         foreach(m; middlewares)
         {
            logDebugf("do %s onProcess ..", m.name());

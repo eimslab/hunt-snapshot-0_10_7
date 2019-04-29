@@ -331,7 +331,6 @@ protected:
 
 	final void closeWriteCallBack(){
 		if(_codec is null || _codec.shouldClose()) {
-			logDebug("\t\t --------do close!!!");
 			_down.httpClose();
 		}
 	}
