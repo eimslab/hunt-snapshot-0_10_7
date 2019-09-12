@@ -64,21 +64,21 @@ public:
         //writeln("--------cmp : ", func, " a type :", a.type);
         if (a.type != b.type)
             return false;
-        if (a.type == JSON_TYPE.OBJECT || a.type == JSON_TYPE.ARRAY)
+        if (a.type == JSONType.object || a.type == JSONType.array)
             return false;
-        else if (a.type == JSON_TYPE.STRING)
+        else if (a.type == JSONType.string)
         {
             return execCmp!string(a.str, b.str, func);
         }
-        else if (a.type == JSON_TYPE.INTEGER)
+        else if (a.type == JSONType.integer)
         {
             return execCmp!long(a.integer, b.integer, func);
         }
-        else if (a.type == JSON_TYPE.TRUE)
+        else if (a.type == JSONType.true_)
         {
             return true;
         }
-        else if (a.type == JSON_TYPE.FALSE)
+        else if (a.type == JSONType.false_)
         {
             return true;
         }
@@ -88,21 +88,21 @@ public:
 
     bool eval(JSONValue j)
     {
-        if (j.type == JSON_TYPE.OBJECT || j.type == JSON_TYPE.ARRAY)
+        if (j.type == JSONType.object || j.type == JSONType.array)
             return true;
-        else if (j.type == JSON_TYPE.STRING)
+        else if (j.type == JSONType.string)
         {
             return j.str.length > 0 ? true : false;
         }
-        else if (j.type == JSON_TYPE.INTEGER)
+        else if (j.type == JSONType.integer)
         {
             return j.integer > 0 ? true : false;
         }
-        else if (j.type == JSON_TYPE.TRUE)
+        else if (j.type == JSONType.true_)
         {
             return true;
         }
-        else if (j.type == JSON_TYPE.FALSE)
+        else if (j.type == JSONType.false_)
         {
             return false;
         }
@@ -126,7 +126,7 @@ public:
         case Function.Upper:
             {
                 auto res = eval_expression(element.args[0], data);
-                if (res.type == JSON_TYPE.STRING)
+                if (res.type == JSONType.string)
                     result = toUpper(res.str);
                 else
                     result = toUpper(res.toString);
@@ -135,7 +135,7 @@ public:
         case Function.Lower:
             {
                 auto res = eval_expression(element.args[0], data);
-                if (res.type == JSON_TYPE.STRING)
+                if (res.type == JSONType.string)
                     result = toLower(res.str);
                 else
                     result = toLower(res.toString);
@@ -241,7 +241,7 @@ public:
                     auto variable = eval_expression(element_expression, data);
 
                     // writeln("-----variable.type-------: ",variable.type);
-                    if (variable.type == JSON_TYPE.STRING)
+                    if (variable.type == JSONType.string)
                     {
                         result ~= variable.str;
                     }
@@ -261,7 +261,7 @@ public:
                         {
                             auto list = eval_expression(element_loop.list, data);
                             //writeln("----list ----: ", list);
-                            if (list.type != JSON_TYPE.ARRAY)
+                            if (list.type != JSONType.array)
                             {
                                 template_engine_throw("render_error",
                                         list.toString ~ " is not an array");
@@ -280,7 +280,7 @@ public:
                         {
                             auto map = eval_expression(element_loop.list, data);
                             //writeln("----Loop type ----: ", map.type," map.toString : ",map.toString);
-                            if (map.type != JSON_TYPE.OBJECT)
+                            if (map.type != JSONType.object)
                             {
                                 template_engine_throw("render_error",
                                         map.toString ~ " is not an object");

@@ -100,7 +100,7 @@ class TcpListener : AbstractListener
 
             this.socket.setOption(SocketOptionLevel.SOCKET, cast(SocketOption) SO_REUSEPORT, use);
         }
-        else version (windows)
+        else version (Windows)
         {
             import core.sys.windows.winsock2;
 
